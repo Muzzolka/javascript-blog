@@ -1,5 +1,21 @@
 'use strict';
 
+function generateTitleLinks() {
+    const links = document.querySelectorAll('.titles span');
+    for (let link of links) {
+        link.innerHTML = ""
+    }
+    const articles = document.querySelectorAll('article');
+    for (let article of articles) {
+        const articleId = article.getAttribute('id');
+        const articleTitle = article.querySelector('.post-title').innerHTML;
+        const titleLink = document.querySelector('a[href="#' + articleId + '"] span');
+        titleLink.innerHTML = articleTitle;
+    }
+}
+
+generateTitleLinks()
+
 function clickLinkHandler(event) {
     event.preventDefault();
     const clickedElement = this;
