@@ -136,3 +136,50 @@ function addClickListenersToTags() {
 }
 
 addClickListenersToTags();
+
+function generateAuthorLinks() {
+    for (let author of document.querySelectorAll('.post-author')) {
+    /* delete authors from all wrappers */
+        author.innerHTML = '';
+    }
+    for(let article of document.querySelectorAll('article')) {
+    /* for each article */
+        const author = article.getAttribute('data-author');
+        /* take data-author value*/
+        const authorLink = `<a href="#tag-${author}">${author}</a>`
+        /* create a link with author value */
+        console.log(authorLink);
+        article.querySelector('.post-author').innerHTML = authorLink;
+        /* put a link into acrticle wrapper */
+    }
+}
+
+function clickedAuthorLinkHandler() {
+    const clickedLink = this;
+    for (let author of document.querySelectorAll('.post-authors .active')) {
+        author.classList.remove('active');
+    }
+    /* delete all active classes from authors */
+    const href = clickedLink.getAttribute('href');
+    /* take href from this */
+    const tag = href.replace('#tag-', '');
+    /* take tag from this */
+    for (let hrefLink of document.querySelectorAll('a[href="' + href + '"]')) {
+        hrefLink.classList.add('active');
+        console.log(hrefLink);
+    }
+    /* add active to all hrefs == our href */
+    console.log('[data-author~="' + tag + '"]')
+    generateTitleLinks('[data-author~="' + tag + '"]')
+}
+
+function authorsListener() {
+    for (let link of document.querySelectorAll('.post-author a')) {
+    /* for every link of author links */
+        link.addEventListener('click', clickedAuthorLinkHandler);
+    }
+}
+
+generateAuthorLinks()
+
+authorsListener();
