@@ -55,7 +55,24 @@ for (let link of links) {
     link.addEventListener('click', clickLinkHandler);
 }
 
+function calculateTagsParams(tags) {
+    const params = { 'max': 0, 'min': 999999}
+    for (let tag in tags) {
+        params.max = tags[tag] > params.max ? tags[tag] : params.max;
+        params.min = tags[tag] < params.min ? tags[tag] : params.min;
+    }
+    return params
+}
+
+function calculateTagClass(tag, params) {
+    return Math.floor((tag - params.min)/(params.max - params.min) * 4 + 1);
+}
+
+//tag-size
+
 function generateTags() {
+    /* empty variable for all Tags */
+    let allTags = {};
     /*find all articles */
     const articles = document.querySelectorAll('article');
     /* START LOOP: for every article: */
@@ -75,10 +92,17 @@ function generateTags() {
         for (let tag of dataTags.split(' ')){
             console.log(dataTags.split(' '));
             console.log(tag);
-            const linkHtml = `<li><a href="#tag-${tag}">` + tag + ' ' + '</a></li>';
+            const linkHTML = `<li><a href="#tag-${tag}">` + tag + '</a></li>';
             /* generate HTML of the link */
-            htmlVar = htmlVar + linkHtml;
+            htmlVar = htmlVar + linkHTML;
             /* add generated code to the html variable*/
+
+            /* [NEW] check if this link is NOT already in allTags */
+            if(!allTags.hasOwnProperty(tag)){
+                allTags[tag] = 1;
+            } else {
+                allTags[tag]++;
+            }
         }
         /*END LOPP: for each tag */
         console.log(htmlVar);
@@ -86,6 +110,22 @@ function generateTags() {
     /* insert HTML of all the links into the tags wrapper */
     /* END LOOP */
     }
+
+    /* [NEW] find list of tags in right column */
+    const tagList = document.querySelector('.tags');
+
+    /* [NEW] add html from allTags to tagList */
+    console.log('tuuuu: ', allTags);
+
+    const tagsParams = calculateTagsParams(allTags);
+    console.log('tagsParam:', tagsParams)
+    let allTagsHTML = '';
+
+    for (let tag in allTags) {
+        allTagsHTML += `<li><a class="tag-size-${calculateTagClass(allTags[tag], tagsParams)} href="#tag-${tag}">` + tag + '</a></li>';
+    }
+    console.log(allTagsHTML);
+    tagList.innerHTML = allTagsHTML;
 }
 
 generateTags();
@@ -138,6 +178,7 @@ function addClickListenersToTags() {
 addClickListenersToTags();
 
 function generateAuthorLinks() {
+    let allAuthors = {};
     for (let author of document.querySelectorAll('.post-author')) {
     /* delete authors from all wrappers */
         author.innerHTML = '';
@@ -152,6 +193,19 @@ function generateAuthorLinks() {
         article.querySelector('.post-author').innerHTML = authorLink;
         /* put a link into acrticle wrapper */
     }
+    for (let author of document.querySelectorAll('.post-author a')) {
+        author = author.getAttribute('href').replace('#tag-', '');
+        if(!allAuthors.hasOwnProperty(author)){
+            allAuthors[author] = 1;
+        } else {
+            allAuthors[author]++;
+        }
+    }
+    let allAuthorsHTML = '';
+    for (let author in allAuthors) {
+        allAuthorsHTML += `<li><a href="#tag-${author}">` + author + '( ' + allAuthors[author] + ' )</a></li>';
+    }
+    document.querySelector('.list.authors').innerHTML = allAuthorsHTML;
 }
 
 function clickedAuthorLinkHandler() {

@@ -41,6 +41,26 @@ body {
   }
 }
 
+.tag-size-1 {
+  font-size: 16px;
+}
+
+.tag-size-2 {
+  font-size: 18px;
+}
+
+.tag-size-3 {
+  font-size: 22px;
+}
+
+.tag-size-4 {
+  font-size: 24px;
+}
+
+.tag-size-5 {
+  font-size: 26px;
+}
+
 /* Layout */
 
 .wrapper {
@@ -86,6 +106,12 @@ body {
 }
 
 .list-horizontal {
+  li {
+    display: inline-block;
+  }
+}
+
+.list.tags {
   li {
     display: inline-block;
   }
